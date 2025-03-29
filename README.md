@@ -1,2 +1,29 @@
-### Dùng sql(chữ đã được Tín gửi vào nhóm trước đó, nếu cần data bên máy t thì nhắn để t xuất ra rồi ae import vào nhé)
-### Bỏ qua thư mục config nhé(có thể xóa nó cũng được)
+CREATE DATABASE SocialNetworkDB;
+USE SocialNetworkDB;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
+    user_id INT NOT NULL,
+    status ENUM('draft', 'published') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE follows (
+    following_user_id INT NOT NULL,
+    followed_user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (following_user_id, followed_user_id),
+    FOREIGN KEY (following_user_id) REFERENCES users(id) ON DELETE RESTRICT,
+    FOREIGN KEY (followed_user_id) REFERENCES users(id) ON DELETE RESTRICT
+);
